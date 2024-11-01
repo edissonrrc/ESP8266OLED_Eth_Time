@@ -19,13 +19,13 @@ Ticker ticker;
 WiFiClientSecure clientSecure;
 
 String hora = "00:00";  
-String fecha = "01.JAN";  // Variable para la fecha inicial en formato DD-MMM
+String fecha = "01.JAN";  
 String tempZaragoza = "00"; 
 int precioEthereumEUR = 0;  
 bool puntosEncendidos = true;  
 unsigned long ultimoTiempoSync = 0;  
 unsigned long ultimoTiempoParpadeo = 0;  
-const unsigned long intervaloSync = 10000;  
+const unsigned long intervaloSync = 10000;  // Sincronización cada 10 segundos
 const unsigned long intervaloParpadeo = 1000;  
 
 String sincronizarHora();
@@ -86,10 +86,10 @@ String sincronizarHora() {
     DynamicJsonDocument doc(1024);
     DeserializationError error = deserializeJson(doc, payload);
     if (!error) {
-      nuevaHora = doc["datetime"].as<String>().substring(11, 16);  // Hora en formato "HH:MM"
+      nuevaHora = doc["datetime"].as<String>().substring(11, 16);  
       String day = doc["datetime"].as<String>().substring(8, 10);
       int month = doc["datetime"].as<String>().substring(5, 7).toInt();
-      fecha = day + "." + String(meses[month - 1]);  // Formato "DD-MMM"
+      fecha = day + "." + String(meses[month - 1]);  
       Serial.println("Hora sincronizada: " + nuevaHora);
       Serial.println("Fecha sincronizada: " + fecha);
     } else {
@@ -109,7 +109,7 @@ String obtenerTemperaturaZaragoza() {
   String temperatura = "N/A";
   if (httpCode == HTTP_CODE_OK) {
     temperatura = http.getString();
-    temperatura.replace("°C", "");  // Elimina el símbolo de grado y 'C'
+    temperatura.replace("°C", "");  
     Serial.println("Temperatura obtenida: " + temperatura);
   } else {
     Serial.println("Error al obtener la temperatura.");
@@ -159,20 +159,20 @@ void loop() {
   
   // Muestra el precio de Ethereum en la parte superior
   display.setTextSize(2);
-  display.setCursor(20, 0);  // Ajuste para que el precio esté más hacia la izquierda
+  display.setCursor(20, 0);  
   display.print(precioEthereumEUR);
   display.setCursor(70, 0);
   display.setTextSize(1);
   display.print("ETH/EUR");
 
-  // Muestra la fecha en el formato "DD-MMM" en la posición (3, 19)
+  // Muestra la fecha en el formato "DD-MMM" en la posición (0, 20)
   display.setTextSize(2);
   display.setCursor(0, 20);
   display.print(fecha);
 
   // Muestra la temperatura en la esquina superior derecha, un poco más abajo
   display.setTextSize(2);
-  display.setCursor(90, 20);  // Posición ajustada hacia abajo
+  display.setCursor(90, 20);  
   display.print(tempZaragoza);
 
   // Muestra la hora en la parte inferior izquierda en tamaño 3
@@ -185,5 +185,4 @@ void loop() {
   }
 
   display.display();
-  delay(100);
 }
